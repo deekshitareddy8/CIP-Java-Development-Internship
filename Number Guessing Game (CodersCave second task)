@@ -1,0 +1,29 @@
+import java.util.Scanner;
+import java.util.Random;
+
+public class GuessingNumberCodersCave {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        int a = random.nextInt(100) + 1;
+        int b;
+        int att = 0;
+
+        System.out.println("Welcome to the second task of CodersCave. This is the number guessing game.Guess a number between 1 to 100!! Play right now!!");
+
+        do {
+            System.out.print("Enter your guess: ");
+            b = scanner.nextInt();
+            att++;
+
+            if (b < a) {
+                System.out.println("Oops your guess is lower than the original number.Try again please!!");
+            } else if (b > a) {
+                System.out.println("Oops your guess is higher than the original number.Try again please!!");
+            }
+        } while (b != a);
+
+        System.out.println("You finally guessed the number in " + att + " attempts! Congratulations!!");
+    }
+}
