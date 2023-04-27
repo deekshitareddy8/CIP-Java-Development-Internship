@@ -1,57 +1,112 @@
-import java.util.Scanner;
 
-public class ATMInterfaceCodersCave {
-    static Scanner scanner = new Scanner(System.in);
-    static int bal = 25000; 
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-    public static void main(String[] args) {
-        System.out.println("Welcome to CodersCave ATM Interface");
-        while (true) {
-            System.out.println("1.Check your balance");
-            System.out.println("2.Debit/Withdraw cash");
-            System.out.println("3.Credit/Deposit cash");
-            System.out.println("4.Close/Exit from application");
-            System.out.print("Enter your action number: ");
-            int select = scanner.nextInt();
-            switch (select) {
-                case 1:
-                    checkCurrentBalance();
-                    break;
-                case 2:
-                    debitMoney();
-                    break;
-                case 3:
-                    creditMoney();
-                    break;
-                case 4:
-                    System.out.println("Thank you for using CodersCave ATM Interface. You are now about to exit the application!");
-                    System.exit(0);
-                default:
-                    System.out.println("Try again");
+public class ATMInterfaceUpdated extends JFrame implements ActionListener {
+    private JTextField amountTextField;
+    private JLabel balanceL, messageL;
+    private JButton withdrawmButton, depositmButton, balanceButton;
+    private JPanel mainPanel, buttonPanel;
+    private int balance = 150000; // Initial balance
+    private JButton[] nButtons;
+    
+    public ATMInterfaceUpdated() {
+        super("ATM Interface CodersCave");
+        
+        
+        amountTextField = new JTextField(5);
+        balanceL = new JLabel("Current Balance : Rs." + balance);
+        messageL = new JLabel("Enter amount to Credit or Debit.");
+        withdrawmButton = new JButton("Withdraw Money");
+        depositmButton = new JButton("Deposit Money");
+        balanceButton = new JButton("Check Balance");
+        
+        
+        nButtons = new JButton[10];
+        for (int i = 0; i < 10; i++) {
+            nButtons[i] = new JButton("" + i);
+            nButtons[i].addActionListener(this);
+        }
+        
+        
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(3, 1));
+        mainPanel.add(balanceL);
+        mainPanel.add(amountTextField);
+        mainPanel.add(messageL);
+        
+        buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(4, 3));
+        for (int i = 1; i < 10; i++) {
+            buttonPanel.add(nButtons[i]);
+        }
+        buttonPanel.add(new JLabel(""));
+        buttonPanel.add(nButtons[0]);
+        buttonPanel.add(new JLabel(""));
+        buttonPanel.add(withdrawmButton);
+        buttonPanel.add(depositmButton);
+        buttonPanel.add(balanceButton);
+        
+        
+        Container container = getContentPane();
+        container.setLayout(new BorderLayout());
+        container.add(mainPanel, BorderLayout.CENTER);
+        container.add(buttonPanel, BorderLayout.SOUTH);
+        
+        
+        withdrawmButton.addActionListener(this);
+        depositmButton.addActionListener(this);
+        balanceButton.addActionListener(this);
+        
+        
+        setSize(600, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+    
+    public void actionPerformed(ActionEvent event) {
+        String actionCommand = event.getActionCommand();
+        
+        if (actionCommand.equals("Withdraw Money")) {
+            int amount = 0;
+            try {
+                amount = Integer.parseInt(amountTextField.getText());
+            } catch (NumberFormatException e) {
+                messageL.setText("Invalid amount is entered.");
+                return;
             }
-        }
-    }
-
-    private static void checkCurrentBalance() {
-        System.out.println("Your current balance is: " + bal);
-    }
-
-    private static void debitMoney() {
-        System.out.print("Enter the amount to withdraw: ");
-        int amt = scanner.nextInt();
-        if (amt <= bal) {
-            bal -= amt;
-            System.out.println("Please collect your cash.");
-            System.out.println("Your remaining balance is: " + bal);
+            if (amount <= 0 || amount > balance) {
+                messageL.setText("Invalid withdrawal amount.");
+            } else {
+                balance -= amount;
+                messageL.setText("Withdrawal is successful. Balance: $" + balance);
+                balanceL.setText("Balance: $" + balance);
+            }
+        } else if (actionCommand.equals("Deposit Money")) {
+            int amount = 0;
+            try {
+                amount = Integer.parseInt(amountTextField.getText());
+            } catch (NumberFormatException e) {
+                messageL.setText("Invalid amount is entered.");
+                return;
+            }
+            if (amount <= 0) {
+                messageL.setText("Invalid deposit amount.");
+            } else {
+                balance += amount;
+                messageL.setText("Deposit is successful. Balance: $" + balance);
+                balanceL.setText("Balance: $" + balance);
+            }
+        } else if (actionCommand.equals("Check Balance")) {
+            messageL.setText("Current balance is: $" + balance);
         } else {
-            System.out.println("Insufficient balance.");
+            amountTextField.setText(amountTextField.getText() + actionCommand);
         }
     }
-
-    private static void creditMoney() {
-        System.out.print("Enter the amount to deposit: ");
-        int amt = scanner.nextInt();
-        bal += amt;
-        System.out.println("Your new balance is: " + bal);
+    
+    public static void main(String[] args) {
+        ATMInterfaceUpdated atmcoder = new ATMInterfaceUpdated();
     }
 }
