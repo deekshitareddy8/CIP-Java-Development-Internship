@@ -1,0 +1,62 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class BMICalculatorApp extends JFrame implements ActionListener {
+    private JTextField heightF, weightF, bmiCalc;
+    private JButton calcB, clearB;
+    
+    public BMICalculatorApp() {
+        setTitle("BMI Calculator Coders Cave");
+        setSize(500, 500);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
+        JPanel panel = new JPanel(new GridLayout(5, 3));
+        panel.add(new JLabel("Enter height in metres:"));
+        heightF = new JTextField();
+        panel.add(heightF);
+        panel.add(new JLabel("Enter weight in kilograms:"));
+        weightF = new JTextField();
+        panel.add(weightF);
+        panel.add(new JLabel("BMI is:"));
+        bmiCalc = new JTextField();
+        bmiCalc.setEditable(false);
+        panel.add(bmiCalc);
+        
+        calcB = new JButton("Calculate");
+        calcB.setBackground(Color.CYAN);
+        calcB.setForeground(Color.BLACK);
+        calcB.addActionListener(this);
+        panel.add(calcB);
+        clearB = new JButton("Clear");
+        clearB.setBackground(Color.CYAN);
+        clearB.setForeground(Color.BLACK);
+        clearB.addActionListener(this);
+        panel.add(clearB);
+        
+        getContentPane().add(panel, BorderLayout.CENTER);
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == calcB) {
+            try {
+                double height = Double.parseDouble(heightF.getText());
+                double weight = Double.parseDouble(weightF.getText());
+                double bmi = weight / (height * height);
+                bmiCalc.setText(String.format("%.2f", bmi));
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Invalid input");
+            }
+        } else if (e.getSource() == clearB) {
+            heightF.setText("");
+            weightF.setText("");
+            bmiCalc.setText("");
+        }
+    }
+    
+    public static void main(String[] args) {
+        BMICalculatorApp calculator1 = new BMICalculatorApp();
+        calculator1.setVisible(true);
+    }
+}
