@@ -1,29 +1,77 @@
-import java.util.Scanner;
-import java.util.Random;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-public class GuessingNumberCodersCave {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Random random = new Random();
+public class NumberGuessing extends JFrame implements ActionListener {
+  private int guessingNumber, noGuessesLeft;
+  private JTextField inputOfGuess;
+  private JButton buttonG, buttonNew;
+  private JLabel messLabel, gLeftLabel;
 
-        int a = random.nextInt(100) + 1;
-        int b;
-        int att = 0;
+  public NumberGuessing() {
+    setTitle("Number Guessing Game Coders Cave");
+    setSize(500, 300);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new GridLayout(6, 3));
 
-        System.out.println("Welcome to the second task of CodersCave. This is the number guessing game.Guess a number between 1 to 100!! Play right now!!");
+    
+    guessingNumber = (int) (Math.random() * 100 + 1);
+    noGuessesLeft = 8;
 
-        do {
-            System.out.print("Enter your guess: ");
-            b = scanner.nextInt();
-            att++;
+    messLabel = new JLabel("Welcome to the Coders Cave Number Guessing Game!! Guess a number from 1 to 100.");
+    add(messLabel);
 
-            if (b < a) {
-                System.out.println("Oops your guess is lower than the original number.Try again please!!");
-            } else if (b > a) {
-                System.out.println("Oops your guess is higher than the original number.Try again please!!");
-            }
-        } while (b != a);
+    inputOfGuess = new JTextField(10);
+    add(inputOfGuess);
 
-        System.out.println("You finally guessed the number in " + att + " attempts! Congratulations!!");
+    buttonG = new JButton("Guess");
+    buttonG.setBackground(Color.pink);
+    buttonG.setForeground(Color.white);
+    buttonG.addActionListener(this);
+    add(buttonG);
+
+    buttonNew = new JButton("New Game");
+    buttonNew.setBackground(Color.pink);
+    buttonNew.setForeground(Color.white);
+    buttonNew.addActionListener(this);
+    add(buttonNew);
+
+    gLeftLabel = new JLabel("Number of Guesses left: " + noGuessesLeft);
+    add(gLeftLabel);
+
+    setVisible(true);
+  }
+
+  public void actionPerformed(ActionEvent e) {
+    if (e.getSource() == buttonG) {
+      int guess = Integer.parseInt(inputOfGuess.getText());
+      noGuessesLeft--;
+      gLeftLabel.setText("Number of Guesses left: " + noGuessesLeft);
+
+      if (guess == guessingNumber) {
+        messLabel.setText("Congratulations champ!! You guessed the number right.");
+        buttonG.setEnabled(false);
+      } else if (guess < guessingNumber) {
+        messLabel.setText("Oops, too low. Guess again maybe?");
+      } else {
+        messLabel.setText("Oops, too high. Guess again maybe?");
+      }
+
+      if (noGuessesLeft == 0) {
+        messLabel.setText("You're done with all your chances, sorry. The correct number was " + guessingNumber + ".");
+        buttonG.setEnabled(false);
+      }
+    } else if (e.getSource() == buttonNew) {
+      guessingNumber = (int) (Math.random() * 100 + 1);
+      noGuessesLeft = 10;
+      buttonG.setEnabled(true);
+      inputOfGuess.setText("");
+      gLeftLabel.setText("Number of Guesses left: " + noGuessesLeft);
+      messLabel.setText("This is a new game.Guess a number between 1 and 100.");
     }
+  }
+
+  public static void main(String[] args) {
+    new NumberGuessing();
+  }
 }
